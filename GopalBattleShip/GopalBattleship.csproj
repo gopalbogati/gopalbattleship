@@ -55,6 +55,7 @@
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Entities\Ships\Battleship.cs" />
     <Compile Include="Entities\Ships\Ship.cs" />
+    <Compile Include="Online\OnlineGameServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

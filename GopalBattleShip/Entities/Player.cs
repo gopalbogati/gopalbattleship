@@ -4,6 +4,7 @@ using GopalBattleship.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace GopalBattleship.Entities
 {
@@ -37,22 +38,32 @@ namespace GopalBattleship.Entities
         /// </summary>
         public void OutputBoards()
         {
-            Console.WriteLine(Name);
-            Console.WriteLine("Own Board:                          Firing Board:");
-            for(int row = 1; row <= 10; row++)
+            Console.WriteLine(GetBoardsString());
+        }
+
+        /// <summary>
+        /// Builds a string representation of both the game and firing boards.
+        /// </summary>
+        public string GetBoardsString()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine(Name);
+            builder.AppendLine("Own Board:                          Firing Board:");
+            for (int row = 1; row <= 10; row++)
             {
-                for(int ownColumn = 1; ownColumn <= 10; ownColumn++)
+                for (int ownColumn = 1; ownColumn <= 10; ownColumn++)
                 {
-                    Console.Write(GameBoard.Panels.At(row, ownColumn).Status + " ");
+                    builder.Append(GameBoard.Panels.At(row, ownColumn).Status + " ");
                 }
-                Console.Write("                ");
+                builder.Append("                ");
                 for (int firingColumn = 1; firingColumn <= 10; firingColumn++)
                 {
-                    Console.Write(FiringBoard.Panels.At(row, firingColumn).Status + " ");
+                    builder.Append(FiringBoard.Panels.At(row, firingColumn).Status + " ");
                 }
-                Console.WriteLine(Environment.NewLine);
+                builder.AppendLine();
             }
-            Console.WriteLine(Environment.NewLine);
+            builder.AppendLine();
+            return builder.ToString();
         }
 
         /// <summary>
