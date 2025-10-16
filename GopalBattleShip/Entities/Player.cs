@@ -4,6 +4,7 @@ using GopalBattleship.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace GopalBattleship.Entities
 {
@@ -37,22 +38,32 @@ namespace GopalBattleship.Entities
         /// </summary>
         public void OutputBoards()
         {
-            Console.WriteLine(Name);
-            Console.WriteLine("Own Board:                          Firing Board:");
-            for(int row = 1; row <= 10; row++)
+            Console.WriteLine(GetBoardsString());
+        }
+
+        /// <summary>
+        /// Builds a string representation of both the game and firing boards.
+        /// </summary>
+        public string GetBoardsString()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine(Name);
+            builder.AppendLine("Own Board:                          Firing Board:");
+            for (int row = 1; row <= 10; row++)
             {
-                for(int ownColumn = 1; ownColumn <= 10; ownColumn++)
+                for (int ownColumn = 1; ownColumn <= 10; ownColumn++)
                 {
-                    Console.Write(GameBoard.Panels.At(row, ownColumn).Status + " ");
+                    builder.Append(GameBoard.Panels.At(row, ownColumn).Status + " ");
                 }
-                Console.Write("                ");
+                builder.Append("                ");
                 for (int firingColumn = 1; firingColumn <= 10; firingColumn++)
                 {
-                    Console.Write(FiringBoard.Panels.At(row, firingColumn).Status + " ");
+                    builder.Append(FiringBoard.Panels.At(row, firingColumn).Status + " ");
                 }
-                Console.WriteLine(Environment.NewLine);
+                builder.AppendLine();
             }
-            Console.WriteLine(Environment.NewLine);
+            builder.AppendLine();
+            return builder.ToString();
         }
 
         /// <summary>
@@ -142,16 +153,31 @@ namespace GopalBattleship.Entities
         public ShotResult ProcessShot(Coordinates coords)
         {
             var panel = GameBoard.Panels.At(coords.Row, coords.Column);
+            if (panel.OccupationType == EnumLabel.Miss)
+            {
+                Console.WriteLine(Name + " says: \"That spot was already a miss.\"");
+                return ShotResult.Miss;
+            }
+
+            if (panel.OccupationType == EnumLabel.Hit)
+            {
+                Console.WriteLine(Name + " says: \"That ship section was already hit!\"");
+                return ShotResult.Hit;
+            }
+
             if (!panel.IsOccupied)
             {
                 Console.WriteLine(Name + " says: \"Firing missed!\"");
+                panel.OccupationType = EnumLabel.Miss;
                 return ShotResult.Miss;
             }
             //A battleship is sunk if it has been hit on all the squares it occupies
             //A player wins if all of their opponent’s battleships have been sunk.
-            var ship = Ships.First(x => x.OccupationType == panel.OccupationType);
+            var occupation = panel.OccupationType;
+            var ship = Ships.First(x => x.OccupationType == occupation);
             ship.Hits++;
             Console.WriteLine(Name + " says: \"Firing hit the target!\"");
+            panel.OccupationType = EnumLabel.Hit;
             if (ship.IsSunk)
             {
                 Console.WriteLine(Name + " says: \"You sunk my " + ship.Name + "!\"");
