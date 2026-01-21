@@ -38,11 +38,11 @@ namespace GopalBattleship.Entities.Boards
             {
                 panels.Add(Panels.At(row - 1, column));
             }
-            if (row < 10)
+            if (row < BoardSize)
             {
                 panels.Add(Panels.At(row + 1, column));
             }
-            if (column < 10)
+            if (column < BoardSize)
             {
                 panels.Add(Panels.At(row, column + 1));
             }

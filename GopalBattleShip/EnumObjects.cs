@@ -12,8 +12,20 @@ namespace GopalBattleship
         [Description("O")]
         Empty,
 
+        [Description("C")]
+        Carrier,
+
         [Description("B")]
         Battleship,
+
+        [Description("R")]
+        Cruiser,
+
+        [Description("S")]
+        Submarine,
+
+        [Description("D")]
+        Destroyer,
 
         [Description("H")]
         Hit,

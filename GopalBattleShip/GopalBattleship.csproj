@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnumObjects.cs" />
+    <Compile Include="Utilities\EnumLabelExtensions.cs" />
     <Compile Include="Utilities\EnumObjectMapper.cs" />
     <Compile Include="Utilities\Helpers.cs" />
     <Compile Include="Utilities\PanelFixture.cs" />
@@ -53,8 +54,12 @@
     <Compile Include="Entities\Boards\Panel.cs" />
     <Compile Include="Entities\Games\Game.cs" />
     <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\Ships\Carrier.cs" />
     <Compile Include="Entities\Ships\Battleship.cs" />
+    <Compile Include="Entities\Ships\Cruiser.cs" />
+    <Compile Include="Entities\Ships\Destroyer.cs" />
     <Compile Include="Entities\Ships\Ship.cs" />
+    <Compile Include="Entities\Ships\Submarine.cs" />
     <Compile Include="Online\OnlineGameServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

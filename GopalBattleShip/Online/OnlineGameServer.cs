@@ -49,9 +49,21 @@ namespace GopalBattleship.Online
                 {
                     var player1 = request.QueryString["player1"];
                     var player2 = request.QueryString["player2"];
-                    var id = Guid.NewGuid().ToString();
-                    _games[id] = new Game(player1, player2);
-                    payload = id;
+                    if (string.IsNullOrWhiteSpace(player1) || string.IsNullOrWhiteSpace(player2))
+                    {
+                        response.StatusCode = 400;
+                        payload = "Both player names are required.";
+                    }
+                    else
+                    {
+                        var id = Guid.NewGuid().ToString();
+                        _games[id] = new Game(player1, player2);
+                        payload = id;
+                    }
+                }
+                else if (request.Url.AbsolutePath == "/health")
+                {
+                    payload = "OK";
                 }
                 else if (request.Url.AbsolutePath == "/fire")
                 {
@@ -92,6 +104,16 @@ namespace GopalBattleship.Online
                     response.StatusCode = 404;
                     payload = "Unknown endpoint";
                 }
+            }
+            catch (ArgumentException ex)
+            {
+                response.StatusCode = 400;
+                payload = ex.Message;
+            }
+            catch (InvalidOperationException ex)
+            {
+                response.StatusCode = 400;
+                payload = ex.Message;
             }
             catch (Exception ex)
             {
