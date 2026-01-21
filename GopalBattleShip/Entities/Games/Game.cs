@@ -38,6 +38,12 @@ namespace GopalBattleship.Entities.Games
                 throw new InvalidOperationException("Game already finished");
             }
 
+            if (coordinates.Row < 1 || coordinates.Row > PlayBoard.BoardSize ||
+                coordinates.Column < 1 || coordinates.Column > PlayBoard.BoardSize)
+            {
+                throw new ArgumentOutOfRangeException(nameof(coordinates), "Shot coordinates are out of bounds.");
+            }
+
             Player shootingPlayer;
             Player opponent;
 

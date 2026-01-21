@@ -27,7 +27,11 @@ namespace GopalBattleship.Entities
             Name = name;
             Ships = new List<Ship>()
             {
-                new Battleship()
+                new Carrier(),
+                new Battleship(),
+                new Cruiser(),
+                new Submarine(),
+                new Destroyer()
             };
             GameBoard = new PlayBoard();
             FiringBoard = new ShootingBoard();
@@ -49,14 +53,14 @@ namespace GopalBattleship.Entities
             StringBuilder builder = new StringBuilder();
             builder.AppendLine(Name);
             builder.AppendLine("Own Board:                          Firing Board:");
-            for (int row = 1; row <= 10; row++)
+            for (int row = 1; row <= PlayBoard.BoardSize; row++)
             {
-                for (int ownColumn = 1; ownColumn <= 10; ownColumn++)
+                for (int ownColumn = 1; ownColumn <= PlayBoard.BoardSize; ownColumn++)
                 {
                     builder.Append(GameBoard.Panels.At(row, ownColumn).Status + " ");
                 }
                 builder.Append("                ");
-                for (int firingColumn = 1; firingColumn <= 10; firingColumn++)
+                for (int firingColumn = 1; firingColumn <= PlayBoard.BoardSize; firingColumn++)
                 {
                     builder.Append(FiringBoard.Panels.At(row, firingColumn).Status + " ");
                 }
@@ -80,29 +84,28 @@ namespace GopalBattleship.Entities
                 bool isOpen = true;
                 while (isOpen)
                 {
-                    var startcolumn = random.Next(1,11);
-                    var startrow = random.Next(1, 11);
+                    var startcolumn = random.Next(1, PlayBoard.BoardSize + 1);
+                    var startrow = random.Next(1, PlayBoard.BoardSize + 1);
                     int endrow = startrow, endcolumn = startcolumn;
                     var orientation = random.Next(1, 101) % 2; //0 for Horizontal
 
-                    List<int> panelNumbers = new List<int>();
                     if (orientation == 0)
-                    {
-                        for (int i = 1; i < ship.Width; i++)
-                        {
-                            endrow++;
-                        }
-                    }
-                    else
                     {
                         for (int i = 1; i < ship.Width; i++)
                         {
                             endcolumn++;
                         }
                     }
+                    else
+                    {
+                        for (int i = 1; i < ship.Width; i++)
+                        {
+                            endrow++;
+                        }
+                    }
 
                     //ships should be placed within the boundry.
-                    if(endrow > 10 || endcolumn > 10)
+                    if(endrow > PlayBoard.BoardSize || endcolumn > PlayBoard.BoardSize)
                     {
                         isOpen = true;
                         continue;
@@ -153,9 +156,14 @@ namespace GopalBattleship.Entities
         public ShotResult ProcessShot(Coordinates coords)
         {
             var panel = GameBoard.Panels.At(coords.Row, coords.Column);
+            if (panel.OccupationType.IsShotResult())
+            {
+                throw new InvalidOperationException("Position already targeted");
+            }
             if (!panel.IsOccupied)
             {
                 Console.WriteLine(Name + " says: \"Firing missed!\"");
+                panel.OccupationType = EnumLabel.Miss;
                 return ShotResult.Miss;
             }
             //A battleship is sunk if it has been hit on all the squares it occupies
@@ -163,6 +171,7 @@ namespace GopalBattleship.Entities
             var ship = Ships.First(x => x.OccupationType == panel.OccupationType);
             ship.Hits++;
             Console.WriteLine(Name + " says: \"Firing hit the target!\"");
+            panel.OccupationType = EnumLabel.Hit;
             if (ship.IsSunk)
             {
                 Console.WriteLine(Name + " says: \"You sunk my " + ship.Name + "!\"");

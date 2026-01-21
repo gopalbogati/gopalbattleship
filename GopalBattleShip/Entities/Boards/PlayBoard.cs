@@ -11,14 +11,15 @@ namespace GopalBattleship.Entities.Boards
     /// </summary>
     public class PlayBoard
     {
+        public const int BoardSize = 10;
         public List<Panel> Panels { get; set; }
 
         public PlayBoard()
         {
             Panels = new List<Panel>();
-            for (int i = 1; i <= 10; i++)
+            for (int i = 1; i <= BoardSize; i++)
             {
-                for (int j = 1; j <= 10; j++)
+                for (int j = 1; j <= BoardSize; j++)
                 {
                     Panels.Add(new Panel(i, j));
                 }

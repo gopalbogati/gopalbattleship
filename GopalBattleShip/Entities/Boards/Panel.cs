@@ -34,7 +34,7 @@ namespace GopalBattleship.Entities.Boards
         {
             get
             {
-                return OccupationType == EnumLabel.Battleship;
+                return OccupationType.IsShip();
             }
         }
 

@@ -7,12 +7,32 @@ namespace GopalBattleship
     {
         static void Main(string[] args)
         {
-            var server = new OnlineGameServer("http://localhost:5000/");
+            var prefix = GetPrefix(args);
+            var server = new OnlineGameServer(prefix);
             server.Start();
-            Console.WriteLine("Battleship online server running at http://localhost:5000/");
+            Console.WriteLine($"Battleship online server running at {prefix}");
             Console.WriteLine("Press Enter to stop the server.");
             Console.ReadLine();
             server.Stop();
+        }
+
+        private static string GetPrefix(string[] args)
+        {
+            var prefix = args.Length > 0
+                ? args[0]
+                : Environment.GetEnvironmentVariable("BATTLESHIP_PREFIX");
+
+            if (string.IsNullOrWhiteSpace(prefix))
+            {
+                prefix = "http://localhost:5000/";
+            }
+
+            if (!prefix.EndsWith("/"))
+            {
+                prefix += "/";
+            }
+
+            return prefix;
         }
     }
 }
